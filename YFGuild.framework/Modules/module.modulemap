@@ -1,0 +1,6 @@
+framework module YFGuild {
+  umbrella header "YFGuild.h"
+
+  export *
+  module * { export * }
+}
