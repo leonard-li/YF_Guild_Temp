@@ -58,6 +58,8 @@ typedef void(^GetUserBlock)(NSError * _Nullable error, YFAuthUserInfo * _Nullabl
 @property (weak, nonatomic) id<YFGuildManagerDelegate> delegate;
 /// 当前玩家是否有公会
 @property (assign, nonatomic, getter=isInGuild) BOOL inGuild;
+/// 包名(默认不需要设置)
+@property (copy, nonatomic) NSString *bundleId;
 
 @property (nonatomic, strong) NSString *currentUserId;
 
@@ -183,6 +185,12 @@ typedef void(^GetUserBlock)(NSError * _Nullable error, YFAuthUserInfo * _Nullabl
 /// 退出公会
 /// @param handler 退出公会结果
 - (void)quitGuild:(CompletionBlock)handler;
+
+/// 更改公会用户Id
+/// @param oldUserId 老用户Id
+/// @param newUserId 新用户Id
+/// @param handler 更改用户Id结果
+- (void)transferUser:(NSString *)oldUserId to:(NSString *)newUserId completion:(CompletionBlock)handler;
 
 /// 获取聊天列表的消息
 /// @param handler 获取消息结果
