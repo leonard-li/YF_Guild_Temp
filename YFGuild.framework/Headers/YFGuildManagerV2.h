@@ -1,9 +1,9 @@
 //
-//  YFGuildManager.h
+//  YFGuildManagerV2.h
 //  YFGuild
 //
-//  Created by leonard.li on 2023/12/20.
-//  Copyright © 2023 yifants. All rights reserved.
+//  Created by 张强 on 2020/4/29.
+//  Copyright © 2020 yifants. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol YFGuildManagerDelegate <NSObject>
+@protocol YFGuildManagerV2Delegate <NSObject>
 
 @required
 
@@ -42,15 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 typedef void(^CompletionBlock)(NSError * _Nullable error);
+//typedef void(^GetMessagesBlock)(NSError * _Nullable error, NSArray<YFMessageInfo *> * _Nullable messages);
+//typedef void(^GetGuildsBlock)(NSError * _Nullable error, NSArray<YFGuildInfo *> * _Nullable guilds);
+//typedef void(^GetUsersBlock)(NSError * _Nullable error, NSArray<YFAuthUserInfo *> * _Nullable users);
+//typedef void(^GetGuildBlock)(NSError * _Nullable error, YFGuildInfo * _Nullable guild);
+//typedef void(^GetUserBlock)(NSError * _Nullable error, YFAuthUserInfo * _Nullable user);
 
-@interface YFGuildManager : NSObject
+@interface YFGuildManagerV2 : NSObject
 
 /// 单例
-@property (class, nonatomic, readonly) YFGuildManager *sharedManager;
+@property (class, nonatomic, readonly) YFGuildManagerV2 *sharedManager;
 /// 公会信息
 @property (strong, nonatomic, readonly) YFGuildInfo *guildInfo;
 /// 设置监听
-@property (weak, nonatomic) id<YFGuildManagerDelegate> delegate;
+@property (weak, nonatomic) id<YFGuildManagerV2Delegate> delegate;
 /// 当前玩家是否有公会
 @property (assign, nonatomic, getter=isInGuild) BOOL inGuild;
 /// 用户ID
@@ -60,13 +65,12 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 /// 平台类型, 不设置则为2, 安卓为1
 @property (assign, nonatomic) int platform;
 
-/// 是否使用1.0版本的公会 默认否
-@property (assign, nonatomic) BOOL useV1;
-
 /// 发起帮助消息的有效期(单位秒, 默认12小时)
 @property (assign, nonatomic) NSTimeInterval helpDismissTime;
 /// 帮助他人后到可以再次帮助他人的间隔时间(单位秒, 默认4小时)
 @property (assign, nonatomic) NSTimeInterval helpCDTime;
+
+- (void)doNothing;
 
 /// 创建公会
 /// @param name 公会名称
@@ -220,7 +224,7 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
                      number:(uint32_t)number
                  completion:(void(^)(NSError * _Nullable error, NSArray<YFGuildUserInfo *> * _Nullable users))handler;
 
-/// 更改公会用户Id
+/// 更改公会用户Id 
 /// @param oldUserId 老用户Id
 /// @param newUserId 新用户Id
 /// @param handler 更改用户Id结果
@@ -242,7 +246,7 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 /// @param guildId 要迁移到的公会Id
 /// @param handler 迁移结果
 - (void)tansferTo:(NSString *)guildId
-       completion:(void(^)(NSError * _Nullable error))handler;
+          completion:(void(^)(NSError * _Nullable error))handler;
 
 // -------------------------------------
 

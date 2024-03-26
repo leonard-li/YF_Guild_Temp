@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "YF_Guild_Temp"
-  spec.version      = "1.0.7"
+  spec.version      = "2.0.1"
   spec.summary      = "公会系统"
 
   spec.description  = <<-DESC
@@ -24,6 +24,9 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.dependency "YF_Auth"
+  spec.dependency "YF_Auth", '>= 2.3.1'
+  spec.resource_bundles = {
+    'YF_GuildResources' => ['Resources/PrivacyInfo.xcprivacy']
+  }
 
 end
