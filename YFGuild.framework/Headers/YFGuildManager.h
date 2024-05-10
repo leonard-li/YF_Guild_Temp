@@ -59,6 +59,10 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 @property (nonatomic, strong) NSString *bid;
 /// 平台类型, 不设置则为2, 安卓为1
 @property (assign, nonatomic) int platform;
+/// 聊天地址
+@property (nonatomic, strong) NSString *chatHost;
+/// 聊天端口号
+@property (nonatomic, assign) NSInteger chatPort;
 
 /// 是否使用1.0版本的公会 默认否
 @property (assign, nonatomic) BOOL useV1;

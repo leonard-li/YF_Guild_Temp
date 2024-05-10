@@ -64,6 +64,10 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 @property (nonatomic, strong) NSString *bid;
 /// 平台类型, 不设置则为2, 安卓为1
 @property (assign, nonatomic) int platform;
+/// 聊天地址
+@property (nonatomic, strong) NSString *chatHost;
+/// 聊天端口号
+@property (nonatomic, assign) NSInteger chatPort;
 
 /// 发起帮助消息的有效期(单位秒, 默认12小时)
 @property (assign, nonatomic) NSTimeInterval helpDismissTime;

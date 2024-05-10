@@ -24,4 +24,4 @@ FOUNDATION_EXPORT const unsigned char YFGuildVersionString[];
 #import <YFGuild/YFGuildManagerV1.h>
 #import <YFGuild/YFGuildManagerV2.h>
 
-#define YF_GUILD_VERSION @"2.0.1"
+#define YF_GUILD_VERSION @"2.0.2"
