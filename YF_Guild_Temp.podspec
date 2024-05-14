@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "YF_Guild_Temp"
-  spec.version      = "2.0.3.test"
+  spec.version      = "2.0.3.test1"
   spec.summary      = "公会系统"
 
   spec.description  = <<-DESC

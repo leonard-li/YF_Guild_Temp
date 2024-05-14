@@ -110,6 +110,14 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
              number:(uint32_t)number
          completion:(void(^)(NSError * _Nullable error, NSArray<YFGuildInfo *> * _Nullable guilds))handler;
 
+/// 按照公会ID搜索公会
+/// @param guildId 公会 ID
+/// @param handler 搜索到的公会
+- (void)searchGuildsWithId:(NSString *)guildId 
+                     index:(uint32_t)index
+                    number:(uint32_t)number
+                completion:(void(^)(NSError * _Nullable error, NSArray<YFGuildInfo *> * _Nullable guilds))handler;
+
 /// 加入公会
 /// @param guildId 公开的公会ID
 /// @param handler 加入结果
