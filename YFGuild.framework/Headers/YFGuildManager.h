@@ -138,6 +138,11 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
           withScore:(NSInteger)score
          completion:(void(^)(NSError * _Nullable error))handler;
 
+/// 更新玩家等级/进度
+/// @param level 玩家等级/进度
+/// @param handler 更新结果
+- (void)updateLevel:(uint32_t)level completion:(CompletionBlock)handler;
+
 - (void)setManager:(NSString *)userId
           completion:(void(^)(NSError * _Nullable error))handler;
 
