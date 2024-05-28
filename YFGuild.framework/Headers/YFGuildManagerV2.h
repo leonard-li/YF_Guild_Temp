@@ -74,6 +74,9 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 /// 帮助他人后到可以再次帮助他人的间隔时间(单位秒, 默认4小时)
 @property (assign, nonatomic) NSTimeInterval helpCDTime;
 
+/// 是否使用国内版的2.0公会
+@property (assign, nonatomic) BOOL mainLand;
+
 - (void)doNothing;
 
 /// 创建公会

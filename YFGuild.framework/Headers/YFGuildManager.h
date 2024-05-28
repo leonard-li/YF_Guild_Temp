@@ -67,10 +67,15 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 /// 是否使用1.0版本的公会 默认否
 @property (assign, nonatomic) BOOL useV1;
 
-/// 发起帮助消息的有效期(单位秒, 默认12小时)
-@property (assign, nonatomic) NSTimeInterval helpDismissTime;
-/// 帮助他人后到可以再次帮助他人的间隔时间(单位秒, 默认4小时)
-@property (assign, nonatomic) NSTimeInterval helpCDTime;
+/// 是否使用国内版的2.0公会
+@property (assign, nonatomic) BOOL mainLand;
+
+///// 发起帮助消息的有效期(单位秒, 默认12小时)
+//@property (assign, nonatomic) NSTimeInterval helpDismissTime;
+///// 帮助他人后到可以再次帮助他人的间隔时间(单位秒, 默认4小时)
+//@property (assign, nonatomic) NSTimeInterval helpCDTime;
+
+- (void)initGuildSDK;
 
 /// 创建公会
 /// @param name 公会名称
