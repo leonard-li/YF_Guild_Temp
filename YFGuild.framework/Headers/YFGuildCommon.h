@@ -35,6 +35,7 @@ typedef NS_ENUM(uint32_t, YFGuildType) {
     YFGuildTypeSemiPublic = 4   //公开且需要审核的公会
 };
 
+// 消息类型(文本、互助、申请,邀请...等) 10000以内为公会系统自用 开发者可自定义范围(10000-90000)
 typedef NS_ENUM(uint32_t, YFMessageType) {
     YFMessageTypeText = 1,
     YFMessageTypeRequestHelp = 2,
@@ -58,6 +59,7 @@ typedef NS_ENUM(uint32_t, YFMessageSendStatus) {
     YFMessageSendStatusSuccess = 3
 };
 
+// 1.已读 2.同意入会 3.拒绝入会 4.删除消息 10000以内数值系统自用 可自定义范围(10000-90000)
 typedef NS_ENUM(uint32_t, YFMessageHandle) {
     YFMessageHandleRead = 1,
     YFMessageHandleAccept = 2,
@@ -72,3 +74,10 @@ typedef NS_ENUM(uint32_t, YFMessageStatus) {
     YFMessageStatusRefuse = 3,
     YFMessageStatusDelete = 4
 };
+
+@interface YFMessageBase
+
+@property (copy, nonatomic) NSString *uid; // 消息唯一ID
+@property (assign, nonatomic) YFMessageType type; // 消息类型  1.已读 2.同意入会 3.拒绝入会 4.删除消息 10000以内数值系统自用 可自定义范围(10000-90000)
+
+@end

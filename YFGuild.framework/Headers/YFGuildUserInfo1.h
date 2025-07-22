@@ -1,19 +1,19 @@
 //
-//  YFGuildUserInfo.h
+//  YFGuildUserInfo1.h
 //  YFGuild
 //
-//  Created by leonard.li on 2023/6/6.
-//  Copyright © 2023 yifants. All rights reserved.
+//  Created by leonard.li on 12/26/24.
+//  Copyright © 2024 yifants. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <YFAuth/YFAuth.h>
 
-@class Player;
+@class GPlayer;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface YFGuildUserInfo : NSObject
+@interface YFGuildUserInfo1 : NSObject
 
 @property (copy, nonatomic) NSString *userId; // 成员ID
 @property (copy, nonatomic) NSString *userName; // 成员昵称
@@ -30,15 +30,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) uint32_t helpsMade; // 玩家累计帮助次数
 @property (assign, nonatomic) uint32_t helpsReceived; // 玩家累计接收帮助次数
 @property (assign, nonatomic) uint64_t dataId; // 数据自增id
+@property (copy, nonatomic) NSString *guildName; // 公会名称
+@property (copy, nonatomic) NSString *guildBadge; // 公会会徽
 @property (assign, nonatomic) uint32_t activeIndex; // 活跃指数
 @property (assign, nonatomic) uint32_t likes; // 用户点赞数
 
-//兼容1.0版本的属性
-@property (assign, nonatomic) uint64_t joinTime;// 入会时间
++ (instancetype)guildUserWithInfo:(GPlayer *)info;
 
-+ (instancetype)guildUserWithInfo:(Player *)info;
-
-+ (instancetype)guildUserWithYFUserInfo:(YFAuthUserInfo *)info;
 
 @end
 

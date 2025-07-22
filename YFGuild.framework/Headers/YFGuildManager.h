@@ -10,6 +10,13 @@
 #import "YFGuildInfo.h"
 #import "YFMessageInfo.h"
 #import "YFGuildUserInfo.h"
+#import "YFGuildUserInfo1.h"
+#import "YFSeasonPlayerInfo.h"
+#import "YFActivityGuildInfo.h"
+#import "YFActivityPlayerInfo.h"
+#import "YFPlayerRankInfo.h"
+#import "YFGuildRankInfo.h"
+#import "YFHistoryRankInfo.h"
 #import <YFAuth/YFAuth.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -77,6 +84,12 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 
 - (void)initGuildSDK;
 
+/// 获取公会聊天地址及端口号
+/// @param guildId 公会ID, 未加入公会可不传
+/// @param completion 结果回调
+- (void)getChatInfo:(NSString *)guildId
+         completion:(void (^)(NSError * error, NSString * chatHost, NSInteger chatPort))completion;
+
 /// 创建公会
 /// @param name 公会名称
 /// @param badge 公会头像
@@ -91,6 +104,24 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
                minimalLevel:(uint32_t)level
                 description:(NSString *)description
                        geo:(NSString *)geo
+                 completion:(void (^)(NSError * _Nullable error, YFGuildInfo * _Nullable guild))handler __attribute__((deprecated("已过期")));
+
+/// 创建公会
+/// @param name 公会名称
+/// @param badge 公会头像
+/// @param type 公会类型 类型(1.公开且无需审核的公会, 2.非公开且需要审核的公会, 3.非公开且无需要审核的公会, 4.公开且需要审核的公会)
+/// @param level 最低入会等级
+/// @param description 公会描述
+/// @param geo 公会地区信息
+/// @param extendedInfo 扩展信息
+/// @param handler 创建结果回调
+- (void)createGuildWithName:(NSString *)name
+                      badge:(NSString *)badge
+                       type:(YFGuildType)type
+               minimalLevel:(uint32_t)level
+                description:(NSString *)description
+                        geo:(NSString *)geo
+               extendedInfo:(NSString *)extendedInfo
                  completion:(void (^)(NSError * _Nullable error, YFGuildInfo * _Nullable guild))handler;
 
 /// 查看公会成员
@@ -103,6 +134,14 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 /// @param guildId 公会ID
 /// @param handler 结果回调
 - (void)getGuildInfo:(NSString *)guildId
+          completion:(void(^)(NSError * _Nullable error, YFGuildInfo * _Nullable guild))handler __attribute__((deprecated("已过期")));
+
+/// 查看公会信息
+/// @param guildId 公会ID
+/// @param scoreRankId 公会排行榜id, 非必传, 传了这个返回的score就是公会在该榜单分数
+/// @param handler 结果回调
+- (void)getGuildInfo:(NSString *)guildId
+         scoreRankId:(NSString *)scoreRankId
           completion:(void(^)(NSError * _Nullable error, YFGuildInfo * _Nullable guild))handler;
 
 /// 搜索公会
@@ -141,6 +180,28 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
            withRole:(YFRoleType)role
           withLevel:(NSInteger)level
           withScore:(NSInteger)score
+         completion:(void(^)(NSError * _Nullable error))handler __attribute__((deprecated("已过期")));
+
+/// 修改用户在公会中的信息
+/// @param guildId 要修改的公会ID
+/// @param userId 要修改的用户ID
+/// @param role 要修改的用户角色 1.无公会玩家，2.会长，3.管理员，4.普通成员
+/// @param level 要修改的用户等级
+/// @param extendedInfo 玩家扩展信息
+/// @param score 分数
+/// @param name 玩家名称
+/// @param icon 玩家头像
+/// @param activeIndex 玩家活跃指数, 应用于转让会长优先级( 或各类优先级处理)
+/// @param handler 设置结果
+- (void)modifyGuild:(NSString *)guildId
+           withUser:(NSString *)userId
+           withRole:(YFRoleType)role
+          withLevel:(NSInteger)level
+   withExtendedInfo:(NSString *)extendedInfo
+          withScore:(NSInteger)score
+           withName:(NSString *)name
+           withIcon:(NSString *)icon
+    withActiveIndex:(NSInteger)activeIndex
          completion:(void(^)(NSError * _Nullable error))handler;
 
 /// 更新玩家等级/进度
@@ -177,6 +238,24 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 /// @param handler 修改结果
 - (void)modifyGuildInfo:(YFGuildInfo *)info
              completion:(void(^)(NSError * _Nullable error))handler;
+
+/// 无需权限可修改公会信息
+/// @param guildId 公会信息
+/// @param extendedInfo 公会扩展字段
+/// @param recommendIndex 公会推荐指数(越高越靠前 用于推荐公会排序)
+/// @param handler 修改结果
+- (void)modifyGuild:(NSString *)guildId
+   withExtendedInfo:(NSString *)extendedInfo
+ withRecommendIndex:(uint32_t)recommendIndex
+         completion:(void(^)(NSError * _Nullable error))handler;
+
+/// 修改公会最大成员数
+/// @param guildId 公会ID
+/// @param number 公会最大成员数
+/// @param handler 修改结果
+- (void)modifyGuild:(NSString *)guildId
+         withNumber:(uint32_t)number
+         completion:(void(^)(NSError * _Nullable error))handler;
 
 /// 转让公会给某个成员
 /// @param guildId 公会ID
@@ -216,6 +295,22 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
         userName:(NSString *)userName
         userIcon:(NSString *)userIcon
          userGeo:(NSString *)userGeo
+      completion:(void(^)(NSError * _Nullable error))handler __attribute__((deprecated("已过期")));
+
+/// 同步玩家信息
+/// @param userId 玩家ID
+/// @param level 玩家等级
+/// @param userName 玩家名称
+/// @param userIcon 玩家头像
+/// @param userGeo 玩家地区
+/// @param handler 同步结果
+- (void)syncUser:(NSString *)userId
+           level:(NSInteger)level
+        userName:(NSString *)userName
+        userIcon:(NSString *)userIcon
+         userGeo:(NSString *)userGeo
+    extendedInfo:(NSString *)extendedInfo
+     activeIndex:(NSInteger)activeIndex
       completion:(void(^)(NSError * _Nullable error))handler;
 
 /// 搜索玩家
@@ -229,6 +324,22 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
               index:(uint32_t)index
              number:(uint32_t)number
          completion:(void(^)(NSError * _Nullable error, NSArray<YFGuildUserInfo *> * _Nullable users))handler;
+
+/// 根据用户id集合搜索玩家
+/// @param userIds 用户ID集合
+/// @param ids 用户(对应的数据库主键ID) 集合 【一般情况下不需要传这个参数】
+/// @param handler 搜索到的玩家
+- (void)searchWithUserIds:(NSArray *)userIds
+                  withIds:(NSArray *)ids
+               completion:(void(^)(NSError * _Nullable error, NSArray<YFGuildUserInfo1 *> * _Nullable users))handler;
+
+/// 给用户点赞
+/// @param from 发起者用户ID
+/// @param to 目标用户ID
+/// @param handler 结果
+- (void)addLikesFrom:(NSString *)from
+                  to:(NSString *)to
+          completion:(void(^)(NSError * _Nullable error))handler;
 
 /// 获取推荐玩家
 /// @param guildId 公会ID
@@ -307,9 +418,36 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 /// @param handler 结果
 - (void)collectHelp:(NSString *)messageId completion:(void(^)(NSError * _Nullable error))handler;
 
+/// 批量处理多个离线消息
+/// @param messages 消息集合
+/// @param handler 结果
+- (void)handleMultipleMessages:(NSArray<YFMessageBase *> *)messages completion:(void(^)(NSError * _Nullable error))handler;
+
 /// 获取聊天列表的消息
 /// @param handler 获取消息结果
 - (void)getMessagesCompletion:(void(^)(NSError * _Nullable error, NSArray<YFMessageInfo *> * _Nullable messages))handler;
+
+/// 获取有效离线消息
+/// @param guildId 公会ID
+/// @param types 消息类型集合 (文本、互助、申请,邀请...等) 10000以内为公会系统自用 开发者可自定义范围(10000-90000)
+/// @param count 消息数量
+/// @param handler 结果
+- (void)getValidMessagesByGuild:(NSString *)guildId
+                  byMessageType:(NSArray<NSNumber *> *)types
+                        byCount:(uint32_t)count
+                     completion:(void(^)(NSError * _Nullable error, NSArray<YFMessageInfo *> * _Nullable messages))handler;
+
+/// 获取公会有子消息的消息列表
+/// @param guildId 公会ID
+/// @param mainType 主消息类型
+/// @param subTypes 子消息类型集合
+/// @param msgIds 主消息id限制
+/// @param handler 结果
+- (void)getMessagesByGuild:(NSString *)guildId
+             byMessageType:(NSNumber *)mainType
+         bySubMessageTypes:(NSArray<NSNumber *> *)subTypes
+              byMessageIds:(NSArray<NSString *> *)msgIds
+                completion:(void(^)(NSError * _Nullable error, NSArray<YFMessageInfo *> * _Nullable messages))handler;
 
 /// 刷新玩家信息和公会信息
 /// @param handler 刷新结果
@@ -341,6 +479,267 @@ typedef void(^CompletionBlock)(NSError * _Nullable error);
 
 /// 登出聊天室
 - (void)logoutChat;
+
+#pragma mark - 赛季活动
+
+/// 查询玩家在某赛季领取奖励信息
+/// @param activityId 活动Id
+/// @param userId 玩家Id
+/// @param seasonFlag 赛季活动标识
+/// @param completion 回调(在某赛季下领取的奖励id列表)
+- (void)getClaimInfoWithActivityId:(NSString *)activityId
+                            userId:(NSString *)userId
+                        seasonFlag:(int)seasonFlag
+                        completion:(void (^)(NSError * _Nullable error, NSArray<NSString *> * _Nullable rewardIdList))completion;
+
+/// 记录赛季活动领取奖励
+/// @param activityId 活动Id
+/// @param userId 玩家Id
+/// @param seasonFlag 赛季活动标识
+/// @param rewardIdList 赛季活动下唯一奖励id列表
+/// @param completion 回调
+- (void)recordClaimWithActivityId:(NSString *)activityId
+                           userId:(NSString *)userId
+                       seasonFlag:(int)seasonFlag
+                         rewardId:(NSString *)rewardId
+                     rewardIdList:(NSArray<NSString *> *)rewardIdList
+                       completion:(void (^)(NSError * _Nullable error))completion;
+
+/// 查询赛季活动公会玩家信息
+/// @param activityId 活动Id
+/// @param flag 赛季活动标识
+/// @param gId 公会id
+/// @param completion 回调
+- (void)getSeasonPlayerInfoWithActivityId:(NSString *)activityId
+                                     flag:(int)flag
+                                      gId:(NSString *)gId
+                               completion:(void (^)(NSError * _Nullable error, NSArray<YFSeasonPlayerInfo *> * _Nullable list))completion;
+
+/// 查询赛季活动公会信息
+/// @param activityId 活动Id
+/// @param flag 赛季活动标识
+/// @param gId 公会id
+/// @param completion 回调
+- (void)getSeasonGuildInfoWithActivityId:(NSString *)activityId
+                                    flag:(int)flag
+                                     gId:(NSString *)gId
+                              completion:(void (^)(NSError * _Nullable error, double contribute, NSString * guildExtents))completion;
+
+/// 提交赛季活动贡献度
+/// @param activityId 活动Id
+/// @param flag 赛季活动标识
+/// @param contribute 贡献度
+/// @param userId 玩家id
+/// @param guildId 公会id
+/// @param userExtents 玩家扩展信息
+/// @param guildExtents 公会扩展信息
+/// @param completion 回调
+- (void)commitContributeWithActivityId:(NSString *)activityId
+                                  flag:(int)flag
+                            contribute:(double)contribute
+                                userId:(NSString *)userId
+                               guildId:(NSString *)guildId
+                           userExtents:(NSString *)userExtents
+                          guildExtents:(NSString *)guildExtents
+                            completion:(void (^)(NSError * _Nullable error))completion;
+
+/// 获取赛季活动标识
+/// @param activityId 活动Id
+/// @param userId 用户id
+/// @param completion 回调
+- (void)getSeasonFlagInfoWithActivityId:(NSString *)activityId
+                                  userId:(NSString *)userId
+                              completion:(void (^)(NSError * _Nullable error, int flag, double start_time, double end_time))completion;
+
+#pragma mark - 组队活动
+
+/// 根据队伍id获取的玩家
+/// @param activityId 活动Id
+/// @param teamId 队伍Id
+/// @param completion 回调
+- (void)getPlayersWithActivityId:(NSString *)activityId
+                          teamId:(NSString *)teamId
+                      completion:(void (^)(NSError * _Nullable error, NSString * _Nullable roomId, NSArray<YFActivityPlayerInfo *> * _Nullable list))completion;
+
+/// 根据公会id获取不在活动中的玩家
+/// @param activityId 活动Id
+/// @param guildId 公会id
+/// @param endTime 活动结束时间
+/// @param completion 回调
+- (void)getPlayersNotInActivityId:(NSString *)activityId
+                          guildId:(NSString *)guildId
+                          endTime:(double)endTime
+                       completion:(void (^)(NSError * _Nullable error, NSArray<YFActivityPlayerInfo *> * _Nullable list))completion;
+
+/// 创建队伍接口
+/// @param activityId 活动Id
+/// @param endTime 活动结束时间
+/// @param userId 用户Id
+/// @param completion 回调
+- (void)createTeam:(NSString *)activityId
+           endTime:(double)endTime
+            userId:(NSString *)userId
+        completion:(void (^)(NSError * _Nullable error, NSString * _Nullable roomId, NSString * _Nullable teamId))completion;
+
+/// 加入组队活动
+/// @param teamId 队伍id
+/// @param activityId 活动Id
+/// @param endTime 活动结束时间
+/// @param userId 用户Id
+/// @param completion 回调
+- (void)joinTeam:(NSString *)teamId
+      activityId:(NSString *)activityId
+         endTime:(double)endTime
+          userId:(NSString *)userId
+      completion:(void (^)(NSError * _Nullable error))completion;
+
+/// 提交组队活动的分数
+/// @param activityId 活动Id
+/// @param teamId 队伍id
+/// @param userId 用户Id
+/// @param score 分数
+/// @param completion 回调
+- (void)commitTeamActivity:(NSString *)activityId
+                    teamId:(NSString *)teamId
+                    userId:(NSString *)userId
+                     score:(double)score
+                completion:(void (^)(NSError * _Nullable error))completion;
+
+/// 获取组队活动信息
+/// @param activityId 活动Id
+/// @param roomId 活动房间id
+/// @param completion 回调
+- (void)getTeamInfo:(NSString *)activityId
+             roomId:(NSString *)roomId
+         completion:(void (^)(NSError * _Nullable error, NSArray<NSArray<YFActivityPlayerInfo *> *> * _Nullable list))completion;
+
+#pragma mark - 公会活动
+
+/// 获取当前活动的奖励等级
+/// @param activityId 活动Id
+/// @param endTime 当前活动结束时间
+/// @param gid 公会id
+/// @param completion 回调
+- (void)getTreasure:(NSString *)activityId
+            endTime:(double)endTime
+                gid:(NSString *)gid
+         completion:(void (^)(NSError * _Nullable error, int treasure))completion;
+
+/// 获取成员活动信息列表
+/// @param activityId 活动Id
+/// @param roomId 活动房间id
+/// @param gid 公会id
+/// @param completion 回调
+- (void)getPlayerActivity:(NSString *)activityId
+                   roomId:(NSString *)roomId
+                      gid:(NSString *)gid
+               completion:(void (^)(NSError * _Nullable error, NSArray<YFActivityPlayerInfo *> * _Nullable list))completion;
+
+/// 获取公会活动信息列表
+/// @param roomId 活动房间id
+/// @param completion 回调
+- (void)getGuildActivity:(NSString *)roomId
+              completion:(void (^)(NSError * _Nullable error, NSArray<YFActivityGuildInfo *> * _Nullable list))completion;
+
+/// 检查公会是否参与活动
+/// @param activityId 活动id
+/// @param endTime 活动结束时间
+/// @param userId  用户id
+/// @param completion 回调
+- (void)checkGuildInActivity:(NSString *)activityId
+                     endTime:(double)endTime
+                      userId:(NSString *)userId
+                  completion:(void (^)(NSError * _Nullable error, NSString * _Nullable roomId))completion;
+
+/// 提交公会活动的分数请求
+/// @param activityId 活动id
+/// @param userId  用户id
+/// @param score 活动分数
+/// @param roomId 活动房间id
+/// @param completion 回调
+- (void)commitGuildActivity:(NSString *)activityId
+                     userId:(NSString *)userId
+                      socre:(double)score
+                     roomId:(NSString *)roomId
+                 completion:(void (^)(NSError * _Nullable error))completion;
+
+/// 加入公会活动请求
+/// @param activityId 活动id
+/// @param endTime 活动结束时间
+/// @param userId  用户id
+/// @param completion 回调
+- (void)joinGuildActivity:(NSString *)activityId
+                  endTime:(double)endTime
+                   userId:(NSString *)userId
+               completion:(void (^)(NSError * _Nullable error, NSString * _Nullable roomId))completion;
+
+#pragma mark - 公会排行榜
+
+/// 成员提交分数到公会榜单
+/// @param score 分数
+/// @param rankingId  榜单id
+/// @param userId 玩家Id
+/// @param geo 地区
+/// @param extendInfo 提交扩展字段(不同玩家提交则会覆盖 最终在GuildRankingFetchReq接口中返回 以公会为一组)
+/// @param completion 回调
+- (void)commitScore:(double)score
+          toRanking:(NSString *)rankingId
+             userId:(NSString *)userId
+                geo:(NSString *)geo
+          extendInfo:(NSString *)extendInfo
+         completion:(void (^)(NSError * _Nullable error))completion;
+
+/// 获取公会排行榜(升级版)
+/// @param rankingId 榜单id
+/// @param start 起始位置(榜单100位 值为0-99)
+/// @param end 结束位置(榜单100位 值为0-99)
+/// @param geo 要获取的榜单地区
+/// @param completion 回调
+- (void)getGuildRanking2:(NSString *)rankingId
+                   start:(uint32_t)start
+                     end:(uint32_t)end
+                     geo:(NSString *)geo
+              completion:(void (^)(NSError * _Nullable error, NSArray<YFGuildRankInfo *> * _Nullable list))completion;
+
+/// 获取榜单历史前3玩家信息
+/// @param rankingId 榜单id
+/// @param geo 要获取的榜单地区
+/// @param completion 回调
+- (void)getTop3GuildRanking:(NSString *)rankingId
+                        geo:(NSString *)geo
+                 completion:(void (^)(NSError * _Nullable error, NSArray<YFHistoryRankInfo *> * _Nullable list))completion;
+
+/// 获取榜单历史前3玩家信息
+/// @param rankingId 榜单id
+/// @param geo 要获取的榜单地区
+/// @param endTime 获取对应结算时间的记录 时间戳单位：秒
+/// @param limit 返回每期数据条数限制
+/// @param completion 回调
+- (void)getTop3GuildRanking:(NSString *)rankingId
+                        geo:(NSString *)geo
+                    endTime:(int64_t)endTime
+                      limit:(int64_t)limit
+                 completion:(void (^)(NSError * _Nullable error, NSArray<YFHistoryRankInfo *> * _Nullable list))completion;
+
+/// 获取某公会在榜单中的信息
+/// @param rankingId 榜单id
+/// @param guildId 公会id
+/// @param geo 要获取的榜单地区
+/// @param completion 回调
+- (void)getGuildRankInfo:(NSString *)rankingId
+                 guildId:(NSString *)guildId
+                     geo:(NSString *)geo
+              completion:(void (^)(NSError * _Nullable error, int64_t rank, YFGuildRankInfo * _Nullable info))completion;
+
+/// 获取某公会在榜单中成员提交分数的信息
+/// @param rankingId 榜单id
+/// @param guildId 工会id
+/// @param geo 要获取的榜单地区
+/// @param completion 回调
+- (void)getGuildRankMember:(NSString *)rankingId
+                   guildId:(NSString *)guildId
+                       geo:(NSString *)geo
+                completion:(void (^)(NSError * _Nullable error, NSArray<YFPlayerRankInfo *> * _Nullable list))completion;
 
 @end
 
